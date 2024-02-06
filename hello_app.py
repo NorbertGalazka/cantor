@@ -18,14 +18,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    menu = f"""
-            Go <a href="{url_for('exchange')}">here</a> to exchange money
-            """
-    return f"""<h1> Hello World! </h1><br><h2>{menu}</h2> 
-                <img src='{url_for('static', filename='dolar.jpg')}'>
-                    {url_for('static', filename='dolar.jpg')}<br>
-                    {os.path.join(app.static_folder, 'dolar.jpg')}    """
-
+    return render_template('index.html')
 
 @app.route('/about')
 def about():
