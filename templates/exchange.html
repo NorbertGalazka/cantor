@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form id="exchange_form" action="{{url_for('exchange')}}" method="POST">
+        <label for="currency">Currency</label>
+            <input type="text" id="currency" name="currency"><br>
+        <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" value="99"><br>
+        <label for="other_currency">Other_currency</label>
+            <input type="text" id="other_currency" name="other_currency" value="USD"><br>
+        <input type="submit" value="Send">
+    </form>
+</body>
+</html>
