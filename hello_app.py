@@ -53,9 +53,7 @@ def cook_form():
         decision = "Never"
         if 'decision' in request.form:
             decision = "Sure!"
-        return f"""Your rating was {note}. <br>
-                Your comment: {comment}. <br>
-                Do you cook it for your family? :{decision}"""
+        return render_template('cook_form_result.html', note=note, comment=comment, decision=decision)
 
 
 if __name__ == "__main__":
