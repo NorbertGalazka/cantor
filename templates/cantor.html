@@ -6,12 +6,8 @@
 </head>
 <body>
     <h1> Wybrałeś walutę {{ currency }} w ilości {{ amount }} i wymieniasz ją na {{ other }}'</h1>
-    {% if currency == 'USD' %}
-        <img src="{{ url_for('static', filename='dollaro.jpg') }}">
-    {% elif currency == 'EUR' %}
-        <img src="{{ url_for('static', filename='euro.jpg') }}">
-    {% elif currency == 'PLN' %}
-        <img src="{{ url_for('static', filename='zloty.jpg') }}">
-    {% endif %}
+
+    <img src="{{ url_for('static', filename=currency_info.img_path) }}">
+
 </body>
 </html>
