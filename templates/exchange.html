@@ -8,17 +8,17 @@
     <form id="exchange_form" action="{{url_for('exchange')}}" method="POST">
         <label for="currency">Currency</label>
             <select id="currency" name="currency">
-                <option value="EUR">Euro</option>
-                <option value="USD">Dolar</option>
-                <option value="PLN">Złotówka</option>
+                {% for currency in offer.currencies %}
+                    <option value="{{currency.code}}">{{currency.name}}</option>
+                {% endfor %}
             </select>
         <label for="amount">Amount</label>
             <input type="text" id="amount" name="amount" value="99"><br>
         <label for="other_currency">Other_currency</label>
             <select id="other_currency" name="other_currency">
-                <option value="EUR">Euro</option>
-                <option value="USD">Dolar</option>
-                <option value="PLN">Złotówka</option>
+                {% for currency in offer.currencies %}
+                    <option value="{{ currency.code }}">{{currency.name}}</option>
+                {% endfor %}
             </select>
 
 
