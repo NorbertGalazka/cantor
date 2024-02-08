@@ -5,9 +5,11 @@
     <title>Cantor</title>
 </head>
 <body>
-    <h1> Wybrałeś walutę {{ currency }} w ilości {{ amount }} i wymieniasz ją na {{ other }}'</h1>
+    <h1> Wybrałeś walutę {{ currency }} w ilości {{ amount }} i wymieniasz ją na {{ other }}</h1>
 
     <img src="{{ url_for('static', filename=currency_info.img_path) }}">
+
+    <h1> Aby przejść do strony głownej <a href="{{url_for('index')}}"> kliknij tutaj </a> </h1>
 
 </body>
 </html>
