@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cantor</title>
+</head>
+<body>
+    {% for message in get_flashed_messages() %}
+        <div style="color:red; border-style: solid; background-color:yellow;">{{ message }}</div>
+    {% endfor %}
+
+    <h1> {% block body_header %} {% endblock %}</h1>
+
+    {% block body_content %} {% endblock %}
+
+</body>
+</html>

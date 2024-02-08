@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Cantor</title>
-</head>
-<body>
-    <h1> Wybrałeś walutę {{ currency }} w ilości {{ amount }} i wymieniasz ją na {{ other }}</h1>
+{% extends "base.html" %}
 
+{% block body_header %}
+     You selected {{ currency }} in amount {{ amount }} and change it for {{ other }}
+{% endblock %}
+
+{% block body_content %}
     <img src="{{ url_for('static', filename=currency_info.img_path) }}">
 
-    <h1> Aby przejść do strony głownej <a href="{{url_for('index')}}"> kliknij tutaj </a> </h1>
-
-</body>
-</html>
+    <h2> If you want go to main site <a href="{{url_for('index')}}"> click here </a> </h2>
+{% endblock %}

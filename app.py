@@ -1,8 +1,10 @@
-from flask import Flask, request, url_for, redirect, render_template
+from flask import Flask, request, url_for, redirect, render_template, flash
 import os
 
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = '1234'
 
 
 class Currency:
@@ -15,13 +17,15 @@ class Currency:
 class CantorOffer:
     def __init__(self):
         self.currencies = []
+        self.denied_codes = []
 
     def load_currencies(self):
-        self.currencies.append(Currency('USD', 'Dolar', 'dollaro.jpg'))
-        self.currencies.append(Currency('PLN', 'Złoty', 'zloty.jpg'))
-        self.currencies.append(Currency('EURO', 'Euro', 'euro.jpg'))
+        self.currencies.append(Currency("USD", 'Dolar', 'dollaro.jpg'))
+        self.currencies.append(Currency("PLN", 'Złoty', 'zloty.jpg'))
+        self.currencies.append(Currency("EURO", 'Euro', 'euro.jpg'))
         self.currencies.append(Currency('CHF', 'Frank', 'euro.jpg'))
         self.currencies.append(Currency('GBP', 'Funt', 'euro.jpg'))
+        self.denied_codes.append("USD")
 
     def get_by_code(self, code):
         for currency in self.currencies:
@@ -57,6 +61,11 @@ def exchange():
         currency = request.form['currency']
         other_currency = request.form['other_currency']
         amount = request.form['amount']
+        if currency in offer.denied_codes:
+            flash(f'The currency {currency} cannot be accepted!')
+        if other_currency in offer.denied_codes:
+            flash(f'The currency {other_currency} cannot be accepted!')
+
         return render_template('cantor.html',
                                currency=currency, amount=amount,
                                other=other_currency, currency_info=offer.get_by_code(currency))

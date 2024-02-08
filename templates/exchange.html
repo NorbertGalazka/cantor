@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block body_header %} {% endblock %}
+{% block body_content %}
     <form id="exchange_form" action="{{url_for('exchange')}}" method="POST">
         <label for="currency">Currency</label>
             <select id="currency" name="currency">
@@ -24,5 +20,4 @@
 
         <input type="submit" value="Send">
     </form>
-</body>
-</html>
+{% endblock %}

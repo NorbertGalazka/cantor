@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Start</title>
-</head>
-<body>
-
-    <h1> Hello World! </h1><br>
+{% extends "base.html" %}
+{% block body_header %} Hello World! <br>{% endblock %}
+{% block body_content %}
     <h2>Go <a href="{{url_for('exchange')}}">here</a> to exchange money</h2>
     <img src="{{url_for('static', filename='dolar.jpg')}}">
     {url_for('static', filename='dolar.jpg')}<br>
     {os.path.join(app.static_folder, 'dolar.jpg')}
-</body>
-</html>
+{% endblock %}
