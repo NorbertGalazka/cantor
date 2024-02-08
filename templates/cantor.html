@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body_content %}
+{{ super() }}
     <img src="{{ url_for('static', filename=currency_info.img_path) }}">
 
     <h2> If you want go to main site <a href="{{url_for('index')}}"> click here </a> </h2>
