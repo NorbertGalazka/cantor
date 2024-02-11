@@ -1,8 +1,10 @@
 from flask import Flask, request, url_for, redirect, render_template, flash
+
 import os
 
 
 app = Flask(__name__)
+
 
 app.config['SECRET_KEY'] = '1234'
 
@@ -39,18 +41,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/about')
-def about():
-    a = 10
-    b = 0
-    return f'<h1> We are programmers!: {a / b} </h1>'
-
-
-@app.route('/cantor/<string:currency>/<int:amount>/<string:other>')
-def cantor(currency, amount, other):
-    return render_template('cantor.html', currency=currency, amount=amount, other=other)
-
-
 @app.route('/exchange', methods=["GET", "POST"])
 def exchange():
     offer = CantorOffer()
@@ -66,7 +56,7 @@ def exchange():
         if other_currency in offer.denied_codes:
             flash(f'The currency {other_currency} cannot be accepted!')
 
-        return render_template('cantor.html',
+        return render_template('exchange_results.html',
                                currency=currency, amount=amount,
                                other=other_currency, currency_info=offer.get_by_code(currency))
 
