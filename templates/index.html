@@ -1,8 +1,11 @@
 {% extends "base.html" %}
-{% block body_header %} Hello World! <br>{% endblock %}
-{% block body_content %}
-    <h2>Go <a href="{{url_for('exchange')}}">here</a> to exchange money</h2>
-    <img src="{{url_for('static', filename='dolar.jpg')}}">
-    {url_for('static', filename='dolar.jpg')}<br>
-    {os.path.join(app.static_folder, 'dolar.jpg')}
+
+{% block title %}
+    Cantor
+{% endblock %}
+
+
+{% block content %}
+Hi all!
+
 {% endblock %}

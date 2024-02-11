@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block body_header %} Enter transaction details {% endblock %}
-{% block body_content %}
-{{ super() }}
+{% block title %}
+Exchange
+{% endblock %}
+
+{% block content %}
     <form id="exchange_form" action="{{url_for('exchange')}}" method="POST">
         <label for="currency">Currency</label>
             <select id="currency" name="currency">
