@@ -10,9 +10,10 @@ app.config['SECRET_KEY'] = '1234'
 
 
 class CurrencyConverter:
-    def __init__(self, currency_code, amount):
+    def __init__(self, currency_code: str, amount, second_currency: str):
         self.currency_code = currency_code
         self.amount = amount
+        self.second_currency = second_currency
 
     def get_currency_value_in_pln(self) -> float:
         if self.currency_code == 'PLN':
@@ -20,6 +21,16 @@ class CurrencyConverter:
         response = requests.get(f'https://api.nbp.pl/api/exchangerates/rates/a/{self.currency_code}/?format=json')
         response = json.loads(response.text)
         return float(response['rates'][0]['mid'] * self.amount)
+
+    def get_second_currency_value_in_pln(self) -> float:
+        if self.currency_code == 'PLN':
+            return 1.0
+        response = requests.get(f'https://api.nbp.pl/api/exchangerates/rates/a/{self.second_currency}/?format=json')
+        response = json.loads(response.text)
+        return float(response['rates'][0]['mid'] * self.amount)
+
+    def get_value(self):
+        return self.get_currency_value_in_pln() / self.get_second_currency_value_in_pln() * self.amount
 
 
 class Currency:
