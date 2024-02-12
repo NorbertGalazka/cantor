@@ -1,12 +1,25 @@
-from flask import Flask, request, url_for, redirect, render_template, flash
-
-import os
+from flask import Flask, request, render_template, flash
+import requests
+import json
 
 
 app = Flask(__name__)
 
 
 app.config['SECRET_KEY'] = '1234'
+
+
+class CurrencyConverter:
+    def __init__(self, currency_code, amount):
+        self.currency_code = currency_code
+        self.amount = amount
+
+    def get_currency_value_in_pln(self) -> float:
+        if self.currency_code == 'PLN':
+            return 1.0
+        response = requests.get(f'https://api.nbp.pl/api/exchangerates/rates/a/{self.currency_code}/?format=json')
+        response = json.loads(response.text)
+        return float(response['rates'][0]['mid'] * self.amount)
 
 
 class Currency:
@@ -51,10 +64,9 @@ def exchange():
         currency = request.form['currency']
         other_currency = request.form['other_currency']
         amount = request.form['amount']
-        if currency in offer.denied_codes:
-            flash(f'The currency {currency} cannot be accepted!')
-        if other_currency in offer.denied_codes:
-            flash(f'The currency {other_currency} cannot be accepted!')
+        for currency in [currency, other_currency]:
+            if currency in offer.denied_codes:
+                flash(f'The currency {currency} cannot be accepted!')
 
         return render_template('exchange_results.html',
                                currency=currency, amount=amount,
@@ -63,3 +75,4 @@ def exchange():
 
 if __name__ == "__main__":
     app.run()
+
