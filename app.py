@@ -3,9 +3,10 @@ import requests
 import json
 import codecs
 import re
+from blueprints.index.index import index_blueprint
 
 app = Flask(__name__)
-
+app.register_blueprint(index_blueprint)
 
 app.config['SECRET_KEY'] = '1234'
 
@@ -61,9 +62,9 @@ class CantorOffer:
         return None
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
 
 
 @app.route('/exchange', methods=["GET", "POST"])
