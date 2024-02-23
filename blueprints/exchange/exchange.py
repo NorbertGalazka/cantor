@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, flash, Blueprint
+from flask import request, render_template, flash, Blueprint
+from database_connect import get_db
 import requests
 import json
 import codecs
@@ -64,23 +65,30 @@ def exchange():
     offer = CantorOffer()
     offer.load_currencies()
     if request.method == "GET":
-        return render_template('exchange.html', offer=offer)
+        return render_template('exchange.html', active_menu='exchange', offer=offer)
     else:
         currency = request.form['currency']
         other_currency = request.form['other_currency']
         amount = request.form['amount']
-        pattern = r'^[\d,.]+$'
+        pattern = r'^\d+(?:[.,]\d+)?$'
         if re.match(pattern, amount):
             amount = amount.replace(',', '.')
-            convert = CurrencyConverter(currency_code=currency, amount=float(amount), second_currency_code=other_currency)
+            convert = CurrencyConverter(currency_code=currency, amount=float(amount),
+                                        second_currency_code=other_currency)
             quantity_received = convert.get_currency_value_in_pln()
             value = round(convert.get_value(), 2)
-            print(value)
+            db = get_db()
+            try:
+                sql_command = 'insert into transactions(currency, amount, user) values(?, ?, ?)'
+                db.execute(sql_command, [currency, amount, 'admin'])
+                db.commit()
+            finally:
+                db.close()
 
             return render_template('exchange_results.html',
                                    currency=currency, amount=amount,
                                    other=other_currency, currency_info=offer.get_by_code(currency),
-                                   quantity_received=quantity_received, value=value)
+                                   quantity_received=quantity_received, value=value, active_menu='exchange')
         else:
-            flash('Panie Kostecki nie ze mną te numery ;) Proszę wpisać jeszcze raz z poprawnymi danymi')
-            return render_template('exchange.html', offer=offer)
+            flash('Please enter correct details. Only numbers and one comma or period are allowed')
+            return render_template('exchange.html', offer=offer, active_menu='exchange')
