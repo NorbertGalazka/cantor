@@ -23,9 +23,19 @@
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
         </li>
+        {% if 'user' not in session %}
         <li class="nav-item">
-          <a class="nav-link" aria-disabled="true">About</a>
+          <a href="{{ url_for('register.register') }}" class="nav-link {{ 'active' if active_menu == 'register' }}" aria-disabled="true">Register</a>
         </li>
+        <li class="nav-item">
+          <a href="{{ url_for('login.login') }}" class="nav-link {{ 'active' if active_menu == 'login' }}" aria-disabled="true">Login</a>
+        </li>
+        {% endif %}
+        {% if 'user' in session %}
+        <li class="nav-item">
+          <a href="{{ url_for('logout') }}" class="nav-link " aria-disabled="true">Logout <em>{{session['user']}}</em></a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
