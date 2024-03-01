@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{{url_for('register.register')}}" method="POST">
+<form action="{{url_for('register.register_route')}}" method="POST">
   <div class="form-group">
     <label for="exampleInputUsername">Username</label>
     <input type="text" class="form-control" id="exampleInputUsername" name='username' aria-describedby="username" placeholder="Enter username">

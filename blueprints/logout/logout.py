@@ -9,4 +9,4 @@ def logout():
     if 'user' in session:
         session.pop('user', None)
         flash('You are logged out')
-    return redirect(url_for('login'))
+    return redirect(url_for('login.login'))

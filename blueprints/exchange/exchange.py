@@ -1,4 +1,5 @@
-from flask import request, render_template, flash, Blueprint
+from flask import request, render_template, flash, Blueprint, session, redirect, url_for
+from user_pass import UserLog
 from database_connect import get_db
 import requests
 import json
@@ -62,10 +63,16 @@ class CantorOffer:
 
 @exchange_blueprint.route('/exchange', methods=["GET", "POST"])
 def exchange():
+    actual_user = UserLog(session.get('user'))
+    actual_user.get_user_info()
+    if not actual_user.is_active:
+        return redirect(url_for('login.login'))
+
     offer = CantorOffer()
     offer.load_currencies()
     if request.method == "GET":
-        return render_template('exchange.html', active_menu='exchange', offer=offer)
+        return render_template('exchange.html', active_menu='exchange',
+                               offer=offer, actual_user=actual_user)
     else:
         currency = request.form['currency']
         other_currency = request.form['other_currency']
@@ -80,7 +87,7 @@ def exchange():
             db = get_db()
             try:
                 sql_command = 'insert into transactions(currency, amount, user) values(?, ?, ?)'
-                db.execute(sql_command, [currency, amount, 'admin'])
+                db.execute(sql_command, [currency, amount, actual_user.username])
                 db.commit()
             finally:
                 db.close()
@@ -88,7 +95,9 @@ def exchange():
             return render_template('exchange_results.html',
                                    currency=currency, amount=amount,
                                    other=other_currency, currency_info=offer.get_by_code(currency),
-                                   quantity_received=quantity_received, value=value, active_menu='exchange')
+                                   quantity_received=quantity_received, value=value, active_menu='exchange',
+                                   actual_user=actual_user)
         else:
             flash('Please enter correct details. Only numbers and one comma or period are allowed')
-            return render_template('exchange.html', offer=offer, active_menu='exchange')
+            return render_template('exchange.html', offer=offer, active_menu='exchange',
+                                   actual_user=actual_user)
