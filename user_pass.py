@@ -59,11 +59,11 @@ class UserLog:
         db = get_db()
         sql_statement = 'select id, name, password, is_active, is_admin from users where name=?'
         cur = db.execute(sql_statement, [self.username])
-        user_record = cur.fetchone()
+        user_data = cur.fetchone()
         db.close()
 
-        if user_record and self.verify_password(user_record['password'], self.password):
-            return user_record
+        if user_data and self.verify_password(user_data['password'], self.password):
+            return user_data
         else:
             return None
 

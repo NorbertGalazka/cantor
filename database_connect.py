@@ -1,7 +1,7 @@
 from flask import g
 import sqlite3
 
-app_info = {'db_file': '/home/norbert-linux/Flask/data/cantor.db'}
+app_info = {'db_file': 'data/cantor.db'}
 
 
 def get_db():

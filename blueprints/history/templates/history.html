@@ -5,11 +5,22 @@
 {% endblock %}
 
 {% block content %}
+
 <table class="table">
+  <colgroup>
+    <col style="border-right: 1px solid #000;">
+    <col style="border-right: 1px solid #000;">
+    <col style="border-right: 1px solid #000;">
+    <col style="border-right: 1px solid #000;">
+    <col style="border-right: 1px solid #000;">
+    <col>
+  </colgroup>
   <thead>
     <tr>
       <th scope="col">Currency</th>
       <th scope="col">Amount</th>
+      <th scope="col">Other Currency</th>
+      <th scope="col">Quantity Received</th>
       <th scope="col">Date</th>
       <th scope="col">Operation</th>
     </tr>
@@ -19,10 +30,10 @@
     <tr>
       <td>{{ transaction.currency }}</td>
       <td>{{ transaction.amount }}</td>
+      <td>{{ transaction.other_currency }}</td>
+      <td>{{ transaction.quantity_received }}</td>
       <td>{{ transaction.trans_date }}</td>
       <td>
-        <a href="#" role="button" class="btn btn-primary">Actions</a>
-        <a href="#" role="button" class="btn btn-success">Edit</a>
         <a href="{{ url_for('delete_transaction.delete_transaction', transaction_id=transaction.id) }}" role="button" class="btn btn-danger">Delete</a>
       </td>
     </tr>

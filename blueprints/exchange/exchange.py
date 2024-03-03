@@ -82,12 +82,13 @@ def exchange():
             amount = amount.replace(',', '.')
             convert = CurrencyConverter(currency_code=currency, amount=float(amount),
                                         second_currency_code=other_currency)
-            quantity_received = convert.get_currency_value_in_pln()
-            value = round(convert.get_value(), 2)
+            value = convert.get_currency_value_in_pln()
+            quantity_received = round(convert.get_value(), 2)
             db = get_db()
             try:
-                sql_command = 'insert into transactions(currency, amount, user) values(?, ?, ?)'
-                db.execute(sql_command, [currency, amount, actual_user.username])
+                sql_command = ('insert into transactions'
+                               '(currency, amount, user, other_currency, quantity_received) values(?, ?, ?, ?, ?)')
+                db.execute(sql_command, [currency, amount, actual_user.username, other_currency, quantity_received])
                 db.commit()
             finally:
                 db.close()
@@ -99,5 +100,4 @@ def exchange():
                                    actual_user=actual_user)
         else:
             flash('Please enter correct details. Only numbers and one comma or period are allowed')
-            return render_template('exchange.html', offer=offer, active_menu='exchange',
-                                   actual_user=actual_user)
+            return redirect(url_for('exchange.exchange'))

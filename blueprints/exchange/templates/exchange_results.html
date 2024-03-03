@@ -4,7 +4,7 @@ Exchange result
 {% endblock %}
 
 {% block content %}
-     You selected {{ amount }} {{ currency }} and change it for {{ value }} {{ other }}  </br>
+     <h2>You selected <strong> {{ amount }} {{ currency }}</strong>  and change it for <strong> {{ quantity_received }} {{ other }} </strong> </br> </h2>
 
     <img src="{{ url_for('static', filename=currency_info.img_path) }}">
 
