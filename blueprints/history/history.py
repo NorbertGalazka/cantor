@@ -13,7 +13,8 @@ def history():
     if not actual_user.is_active:
         return redirect(url_for('login.login'))
     db = get_db()
-    sql_command = """SELECT id, currency, amount, trans_date, other_currency, quantity_received from transactions WHERE user=?;"""
+    sql_command = """SELECT id, currency, amount, trans_date, other_currency, 
+    quantity_received from transactions WHERE user=?;"""
     cur = db.execute(sql_command, [actual_user.username])
     transactions = cur.fetchall()
     return render_template('history.html', transactions=transactions, active_menu='history',
