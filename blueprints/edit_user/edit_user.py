@@ -19,6 +19,7 @@ def edit_user(user_id):
             return render_template('edit_user.html', user=user, actual_user=actual_user)
         else:
             email = request.form['email']
+            username = request.form['username']
             is_admin = 'gridCheck1' in request.form
             is_active = 'gridCheck2' in request.form
             if is_active:
@@ -32,10 +33,10 @@ def edit_user(user_id):
 
             second_sql_statement = """
                         UPDATE users
-                        SET email = ?, is_active = ?, is_admin = ?
+                        SET email = ?, is_active = ?, is_admin = ?, name = ?
                         WHERE id = ?;
                         """
-            db.execute(second_sql_statement, [email, is_active, is_admin, user['id']])
+            db.execute(second_sql_statement, [email, is_active, is_admin, username, user['id']])
             db.commit()
             sql_statement = '''select * from users where id = ?;'''
             cur = db.execute(sql_statement, [user_id])
