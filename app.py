@@ -9,10 +9,14 @@ from blueprints.history.history import history_blueprint
 from blueprints.logout.logout import logout_blueprint
 from blueprints.index.index import index_blueprint
 from blueprints.login.login import login_blueprint
-
+from extensions import db
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '1234'
+app.config.from_pyfile('config.cfg')
+csrf = CSRFProtect(app)
+db.init_app(app)
 app.register_blueprint(delete_transaction_blueprint)
 app.register_blueprint(delete_user_blueprint)
 app.register_blueprint(user_list_blueprint)

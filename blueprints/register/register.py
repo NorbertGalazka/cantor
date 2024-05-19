@@ -6,9 +6,10 @@ import re
 register_blueprint = Blueprint("register", __name__, template_folder='templates')
 
 
-def is_valid_email(email_adress):
-    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(regex, email_adress) is not None
+def is_valid_email(email_address):
+    regex = r'^[a-zA-Z0-9]+(?:[._%+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$'
+    result = re.match(regex, email_address)
+    return result
 
 
 @register_blueprint.route('/register', methods=['GET', 'POST'])

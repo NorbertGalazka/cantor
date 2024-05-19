@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, request, redirect, flash, url_for
-from database_connect import get_db
-from user_pass import UserLog
+from user_pass import UserLog, User
+from extensions import db
 
 
 edit_user_blueprint = Blueprint("edit_user", __name__, template_folder='templates')
@@ -11,10 +11,7 @@ def edit_user(user_id):
     actual_user = UserLog(session.get('user'))
     actual_user.get_user_info()
     if actual_user.is_admin:
-        db = get_db()
-        sql_statement = '''select * from users where id = ?;'''
-        cur = db.execute(sql_statement, [user_id])
-        user = cur.fetchone()
+        user = User.query.filter(User.id == user_id).first()
         if request.method == 'GET':
             return render_template('edit_user.html', user=user, actual_user=actual_user)
         else:
@@ -30,17 +27,15 @@ def edit_user(user_id):
                 is_admin = 1
             else:
                 is_admin = 0
+            user_record = User.query.filter(User.id == user_id).first()
+            user_record.email = email
+            user_record.is_active = is_active
+            user_record.is_admin = is_admin
+            user_record.name = username
+            db.session.commit()
 
-            second_sql_statement = """
-                        UPDATE users
-                        SET email = ?, is_active = ?, is_admin = ?, name = ?
-                        WHERE id = ?;
-                        """
-            db.execute(second_sql_statement, [email, is_active, is_admin, username, user['id']])
-            db.commit()
-            sql_statement = '''select * from users where id = ?;'''
-            cur = db.execute(sql_statement, [user_id])
-            user = cur.fetchone()
+            user = User.query.filter(User.id == user_id).first()
+
             return render_template('edit_user.html', user=user, actual_user=actual_user)
 
     else:

@@ -1,7 +1,30 @@
-from database_connect import get_db
+from datetime import datetime
 from flask import flash
 import hashlib
 import binascii
+
+
+from extensions import db
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    password = db.Column(db.Text)
+    is_active = db.Column(db.Boolean())
+    is_admin = db.Column(db.Boolean())
+    transactions = db.relationship('Transaction', backref='user', lazy='dynamic')
+
+
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    currency = db.Column(db.String(5))
+    amount = db.Column(db.Integer)
+    trans_date = db.Column(db.Date(), default=datetime.now)
+    quantity_received = db.Column(db.Integer)
+    other_currency = db.Column(db.String(5))
+    user_name = db.Column(db.String, db.ForeignKey('user.name'))
 
 
 class UserLog:
@@ -30,60 +53,45 @@ class UserLog:
         return pwdhash == stored_password
 
     def register(self):
-        db = get_db()
-        sql_command = f"""SELECT name, email from users WHERE name=='{self.username}' OR email=='{self.email}';"""
-        cur = db.execute(sql_command)
-        captured_values = cur.fetchall()
-        captured_values_list = []
-        for value in captured_values:
-            if value['email'] == self.email:
-                captured_values_list.append(self.email)
+        captured_users = User.query.all()
+        captured_users_list = []
+        for user in captured_users:
+            if user.email == self.email:
+                captured_users_list.append(self.email)
                 flash(f'Unfortunately email {self.email} is already used')
-            if value['name'] == self.username:
-                captured_values_list.append(self.username)
+            if user.name == self.username:
+                captured_users_list.append(self.username)
                 flash(f'Unfortunately username {self.username} is already used')
-        if captured_values_list:
-            db.close()
+        if captured_users_list:
             return False
         else:
-            try:
-                db.execute("""INSERT INTO users(name, email, password, is_active, is_admin)
-                                VALUES(?,?,?,?,?);""",
-                           [self.username, self.email, self.hash_password(), self.is_active, self.is_admin])
-                db.commit()
-            finally:
-                db.close()
+            new_user = User(name=self.username, email=self.email, password=self.hash_password(), is_active=self.is_active, is_admin=self.is_admin)
+            db.session.add(new_user)
+            db.session.commit()
             return True
 
     def login(self):
-        db = get_db()
-        sql_statement = 'select id, name, password, is_active, is_admin from users where name=?'
-        cur = db.execute(sql_statement, [self.username])
-        user_data = cur.fetchone()
-        db.close()
+        user_data = User.query.filter(User.name == self.username).first()
 
-        if user_data and self.verify_password(user_data['password'], self.password):
+        if user_data and self.verify_password(user_data.password, self.password):
             return user_data
         else:
             return None
 
     def get_user_info(self):
-        db = get_db()
-        sql_statement = 'select id, name, password, is_active, email, is_admin from users where name=?'
-        cur = db.execute(sql_statement, [self.username])
-        db_user = cur.fetchone()
+        db_user = User.query.filter(User.name == self.username).first()
 
         if db_user is None:
             self.is_active = False
             self.is_admin = False
             self.email = ''
-        elif db_user['is_active'] != 1:
+        elif db_user.is_active != 1:
             self.is_active = False
             self.is_admin = False
-            self.email = db_user['email']
+            self.email = db_user.email
         else:
             self.is_active = True
-            self.is_admin = db_user['is_admin']
-            self.email = db_user['email']
+            self.is_admin = db_user.is_admin
+            self.email = db_user.email
 
 

@@ -7,33 +7,41 @@ Exchange
 <h2 class="offset-md-1 mt-4"> New order </h2>
 <form id="exchange_form2" class="row row-cols-lg-auto g-3 align-items-center offset-md-1 " action="{{url_for('exchange.exchange')}}" method="POST">
 
-  <div class="col-12">
-    <label class="visually-hidden" for="currency"></label>
-    <select class="form-select" id="currency" name="currency">
-                {% for currency in offer.currencies %}
-                    <option value="{{currency.code}}">{{currency.name}}</option>
-                {% endfor %}
-    </select>
-  </div>
+  {{ form.hidden_tag() }}
+
 
   <div class="col-12">
-    <label class="visually-hidden" for="amount"></label>
-    <div class="input-group">
-      <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" style="width: 150px;">
-    </div>
+    <label for="currency" class="form-label">Currency</label>
+    {{ form.currency(class="form-select", id="currency") }}
+    <ul>
+      {% for error in form.currency.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
   </div>
 
     <div class="col-12">
-    <label class="visually-hidden" for="other_currency"></label>
-    <select class="form-select" id="other_currency" name="other_currency">
-                {% for currency in offer.currencies %}
-                    <option value="{{currency.code}}">{{currency.name}}</option>
-                {% endfor %}
-    </select>
+    <label for="amount" class="form-label">Amount</label>
+    {{ form.amount(class="form-control", id="amount") }}
+    <ul>
+      {% for error in form.amount.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-12">
+    <label for="other_currency" class="form-label">Other Currency</label>
+    {{ form.other_currency(class="form-select", id="other_currency") }}
+    <ul>
+      {% for error in form.other_currency.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
   </div>
 
   <div class="col-auto">
-    <button type="submit" class="btn btn-primary" >Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
   </div>
 </form>
 {% endblock %}

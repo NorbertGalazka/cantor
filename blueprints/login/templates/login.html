@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content %}
+
+
 <form action="{{url_for('login.login')}}" method="POST">
+  {{ form.hidden_tag() }}
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" class="form-control" name='username' id="username" placeholder="Enter username">
